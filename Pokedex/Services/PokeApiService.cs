@@ -66,7 +66,6 @@ namespace Pokedex.Services
 
                 var pokemon = MapToPokemon(detailResponse);
 
-                // Obtener información adicional de la especie
                 try
                 {
                     var speciesResponse = await _httpClient.GetFromJsonAsync<PokemonSpeciesResponse>(
@@ -81,9 +80,7 @@ namespace Pokedex.Services
                     }
                 }
                 catch
-                {
-                    // Si falla la descripción, continuamos sin ella
-                }
+                { }
 
                 return pokemon;
             }
@@ -149,7 +146,6 @@ namespace Pokedex.Services
                 return spanishEntry.Flavor_Text.Replace("\n", " ").Replace("\f", " ");
             }
 
-            // Fallback a inglés
             var englishEntry = species.Flavor_Text_Entries?
                 .FirstOrDefault(f => f.Language.Name == "en");
 
