@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Pokedex.View.Principal"
+             Title="Principal">
+  <Grid RowDefinitions="Auto,*">
+        <!-- Header -->
+        <Frame Grid.Row="0" BackgroundColor="#DC0A2D" Padding="20" CornerRadius="0">
+            <Label Text="Pokédex" 
+                   TextColor="White" 
+                   FontSize="28" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+        </Frame>
+        
+        <!-- Lista de Pokémon -->
+        <RefreshView Grid.Row="1" 
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Pokemons}"
+                          SelectionMode="None"
+                          Margin="10">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" 
+                                   Span="2" 
+                                   HorizontalItemSpacing="10"
+                                   VerticalItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Pokemon">
+                        <Frame Padding="0" 
+                               CornerRadius="15" 
+                               HasShadow="True">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=GoToDetailCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                            
+                            <Grid RowDefinitions="120,Auto,Auto" 
+                                  Padding="10"
+                                  BackgroundColor="#F5F5F5">
+                                <Image Grid.Row="0" 
+                                       Source="{Binding ImageUrl}"
+                                       Aspect="AspectFit"
+                                       HeightRequest="100"/>
+                                
+                                <Label Grid.Row="1" 
+                                       Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       Margin="0,5,0,0"/>
+                                
+                                <Label Grid.Row="2" 
+                                       Text="{Binding Id, StringFormat='#{0:D3}'}"
+                                       FontSize="12"
+                                       TextColor="Gray"
+                                       HorizontalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+        
+        <!-- Loading indicator -->
+        <ActivityIndicator Grid.Row="1" 
+                         IsRunning="{Binding IsBusy}"
+                         IsVisible="{Binding IsBusy}"
+                         Color="#DC0A2D"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>
