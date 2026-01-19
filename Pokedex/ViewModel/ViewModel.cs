@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Pokedex.ViewModel
+namespace Pokedex.ViewModels;
+
+public partial class BaseViewModel : ObservableObject
 {
-    internal class ViewModel
-    {
-    }
+    [ObservableProperty]
+    private bool isBusy;
+
+    [ObservableProperty]
+    private string title;
 }

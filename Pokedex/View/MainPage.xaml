@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Pokedex.View.Principal"
-             Title="Principal">
-  <Grid RowDefinitions="Auto,*">
-        <!-- Header -->
+             xmlns:vm="clr-namespace:Pokedex.ViewModels"
+             xmlns:model="clr-namespace:Pokedex.Models"
+             x:Class="Pokedex.Views.MainPage"
+             x:DataType="vm:MainViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,*">
         <Frame Grid.Row="0" BackgroundColor="#DC0A2D" Padding="20" CornerRadius="0">
             <Label Text="Pokédex" 
                    TextColor="White" 
@@ -12,8 +15,7 @@
                    FontAttributes="Bold"
                    HorizontalOptions="Center"/>
         </Frame>
-        
-        <!-- Lista de Pokémon -->
+
         <RefreshView Grid.Row="1" 
                      IsRefreshing="{Binding IsRefreshing}"
                      Command="{Binding RefreshCommand}">
@@ -26,46 +28,49 @@
                                    HorizontalItemSpacing="10"
                                    VerticalItemSpacing="10"/>
                 </CollectionView.ItemsLayout>
-                
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:Pokemon">
-                        <Frame Padding="0" 
-                               CornerRadius="15" 
-                               HasShadow="True">
+                        <Frame Padding="0" CornerRadius="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=GoToDetailCommand}"
-                                    CommandParameter="{Binding .}"/>
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=GoToDetailCommand}"
+                    CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
-                            
-                            <Grid RowDefinitions="120,Auto,Auto" 
-                                  Padding="10"
-                                  BackgroundColor="#F5F5F5">
-                                <Image Grid.Row="0" 
-                                       Source="{Binding ImageUrl}"
-                                       Aspect="AspectFit"
-                                       HeightRequest="100"/>
-                                
+
+                            <Grid RowDefinitions="140,Auto,Auto" Padding="10" BackgroundColor="#F5F5F5">
+                                <!-- Imagen con fondo blanco -->
+                                <Frame Grid.Row="0" 
+                       BackgroundColor="White" 
+                       CornerRadius="10" 
+                       Padding="5"
+                       HasShadow="False">
+                                    <Image Source="{Binding OfficialArtwork}"
+                           Aspect="AspectFit"
+                           HeightRequest="110"
+                           WidthRequest="110"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                                </Frame>
+
                                 <Label Grid.Row="1" 
-                                       Text="{Binding Name}"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"
-                                       Margin="0,5,0,0"/>
-                                
+                       Text="{Binding DisplayName}"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Margin="0,5,0,0"/>
+
                                 <Label Grid.Row="2" 
-                                       Text="{Binding Id, StringFormat='#{0:D3}'}"
-                                       FontSize="12"
-                                       TextColor="Gray"
-                                       HorizontalOptions="Center"/>
+                       Text="{Binding Id, StringFormat='#{0:D3}'}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"/>
                             </Grid>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
-        
-        <!-- Loading indicator -->
+
         <ActivityIndicator Grid.Row="1" 
                          IsRunning="{Binding IsBusy}"
                          IsVisible="{Binding IsBusy}"

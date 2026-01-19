@@ -1,3 +1,5 @@
+using Pokedex.ViewModels;
+
 namespace Pokedex.Views;
 
 public partial class MainPage : ContentPage

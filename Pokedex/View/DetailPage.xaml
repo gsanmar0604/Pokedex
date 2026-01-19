@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Pokedex.ViewModels"
+             xmlns:model="clr-namespace:Pokedex.Models"
+             x:Class="Pokedex.Views.DetailPage"
+             x:DataType="vm:DetailViewModel"
+             Title="{Binding Pokemon.DisplayName}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <Frame CornerRadius="20" HasShadow="True" Padding="20" BackgroundColor="#F5F5F5">
+                <Image Source="{Binding Pokemon.OfficialArtwork}"
+                       HeightRequest="250"
+                       Aspect="AspectFit"/>
+            </Frame>
+
+            <Frame CornerRadius="15" HasShadow="True" Padding="15">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                      ColumnDefinitions="*,*"
+                      RowSpacing="15">
+
+                    <Label Grid.Row="0" Grid.ColumnSpan="2"
+                           Text="{Binding Pokemon.DisplayName}"
+                           FontSize="32"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"/>
+
+                    <Label Grid.Row="1" Grid.ColumnSpan="2"
+                           Text="{Binding Pokemon.Id, StringFormat='#{0:D3}'}"
+                           FontSize="18"
+                           TextColor="Gray"
+                           HorizontalOptions="Center"/>
+
+                    <VerticalStackLayout Grid.Row="2" Grid.Column="0">
+                        <Label Text="Altura" FontSize="14" TextColor="Gray" HorizontalOptions="Center"/>
+                        <Label Text="{Binding Pokemon.FormattedHeight}" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="2" Grid.Column="1">
+                        <Label Text="Peso" FontSize="14" TextColor="Gray" HorizontalOptions="Center"/>
+                        <Label Text="{Binding Pokemon.FormattedWeight}" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Frame>
+
+            <Frame CornerRadius="15" HasShadow="True" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Tipos" FontSize="20" FontAttributes="Bold"/>
+                    <FlexLayout BindableLayout.ItemsSource="{Binding Pokemon.Types}"
+                               Wrap="Wrap" JustifyContent="Start">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Frame Padding="15,8" CornerRadius="10" BackgroundColor="#DC0A2D" Margin="0,0,10,10">
+                                    <Label Text="{Binding .}" TextColor="White" FontSize="14" FontAttributes="Bold"/>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame CornerRadius="15" HasShadow="True" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Habilidades" FontSize="20" FontAttributes="Bold"/>
+                    <FlexLayout BindableLayout.ItemsSource="{Binding Pokemon.Abilities}"
+                               Wrap="Wrap" JustifyContent="Start">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Frame Padding="15,8" CornerRadius="10" BackgroundColor="#3B4CCA" Margin="0,0,10,10">
+                                    <Label Text="{Binding .}" TextColor="White" FontSize="14"/>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
