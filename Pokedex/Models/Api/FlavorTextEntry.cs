@@ -8,8 +8,8 @@ namespace Pokedex.Models.Api
 {
     public class FlavorTextEntry
     {
-        public string Flavor_Text { get; set; }
-        public NamedApiResource Language { get; set; }
-        public NamedApiResource Version { get; set; }
+        public string? Flavor_Text { get; set; }
+        public NamedApiResource? Language { get; set; }
+        public NamedApiResource? Version { get; set; }
     }
 }

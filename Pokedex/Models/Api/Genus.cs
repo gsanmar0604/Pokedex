@@ -8,7 +8,7 @@ namespace Pokedex.Models.Api
 {
     public class Genus
     {
-        public string Genus_Text { get; set; }
-        public NamedApiResource Language { get; set; }
+        public string? Genus_Text { get; set; }
+        public NamedApiResource? Language { get; set; }
     }
 }

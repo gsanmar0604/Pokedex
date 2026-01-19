@@ -10,6 +10,6 @@ namespace Pokedex.Models.Api
     {
         public bool Is_Hidden { get; set; }
         public int Slot { get; set; }
-        public NamedApiResource Ability { get; set; }
+        public NamedApiResource? Ability { get; set; }
     }
 }

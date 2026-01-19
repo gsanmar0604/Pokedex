@@ -8,6 +8,6 @@ namespace Pokedex.Models.Api
 {
     public class PokemonColor
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

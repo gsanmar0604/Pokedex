@@ -8,6 +8,6 @@ namespace Pokedex.Models.Api
 {
     public class PokemonSpritesOther
     {
-        public OfficialArtwork Official_Artwork { get; set; }
+        public OfficialArtwork? Official_Artwork { get; set; }
     }
 }

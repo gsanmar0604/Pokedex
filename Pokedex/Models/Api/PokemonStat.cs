@@ -10,6 +10,6 @@ namespace Pokedex.Models.Api
     {
         public int Base_Stat { get; set; }
         public int Effort { get; set; }
-        public NamedApiResource Stat { get; set; }
+        public NamedApiResource? Stat { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace Pokedex.Models.Api
     public class PokemonType
     {
         public int Slot { get; set; }
-        public NamedApiResource Type { get; set; }
+        public NamedApiResource? Type { get; set; }
     }
 }

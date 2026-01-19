@@ -8,7 +8,7 @@ namespace Pokedex.Models.Api
 {
     public class OfficialArtwork
     {
-        public string Front_Default { get; set; }
-        public string Front_Shiny { get; set; }
+        public string? Front_Default { get; set; }
+        public string? Front_Shiny { get; set; }
     }
 }

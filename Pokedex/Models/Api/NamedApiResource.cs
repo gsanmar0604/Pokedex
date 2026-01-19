@@ -8,7 +8,7 @@ namespace Pokedex.Models.Api
 {
     public class NamedApiResource
     {
-        public string Name { get; set; }
-        public string Url { get; set; }
+        public string? Name { get; set; }
+        public string? Url { get; set; }
     }
 }
