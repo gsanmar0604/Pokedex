@@ -17,11 +17,11 @@ namespace Pokedex.Models
         public List<string> Types { get; set; } = [];
         public List<string> Abilities { get; set; } = [];
         public Dictionary<string, int> Stats { get; set; } = [];
-        public string? ImageUrl { get; set; }
-        public string? OfficialArtwork { get; set; }
-        public string? Description { get; set; }
-        public string? Category { get; set; }
-        public string? Color { get; set; }
+        public required string ImageUrl { get; set; }
+        public required string OfficialArtwork { get; set; }
+        public required string Description { get; set; }
+        public required string Category { get; set; }
+        public required string Color { get; set; }
         public string FormattedHeight => $"{Height / 10.0:F1} m";
         public string FormattedWeight => $"{Weight / 10.0:F1} kg";
         public string TypesDisplay => string.Join(", ", Types);

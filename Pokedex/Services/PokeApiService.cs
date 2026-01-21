@@ -39,12 +39,12 @@ namespace Pokedex.Services
 
                 var tasks = response.Results.Select(async item =>
                 {
-                    var id = ExtractIdFromUrl(item.Url);
+                    var id = ExtractIdFromUrl(item.Url!);
                     return await GetPokemonByIdAsync(id);
                 });
 
                 var pokemons = await Task.WhenAll(tasks);
-                return pokemons.Where(p => p != null).ToList();
+                return [.. pokemons.Where(p => p != null)];
             }
             catch (Exception ex)
             {
@@ -53,7 +53,7 @@ namespace Pokedex.Services
             }
         }
 
-        public async Task<Pokemon> GetPokemonByIdAsync(int id)
+        public async Task<Pokemon?> GetPokemonByIdAsync(int id)
         {
             try
             {
@@ -64,23 +64,18 @@ namespace Pokedex.Services
                 if (detailResponse == null)
                     return null;
 
-                var pokemon = MapToPokemon(detailResponse);
+                var speciesUrl = detailResponse.Species?.Url;
+                if (speciesUrl == null)
+                    return null;
 
-                try
-                {
-                    var speciesResponse = await _httpClient.GetFromJsonAsync<PokemonSpeciesResponse>(
-                        $"pokemon-species/{id}",
-                        _jsonOptions);
+                var speciesResponse = await _httpClient.GetFromJsonAsync<PokemonSpeciesResponse>(
+                    speciesUrl,
+                    _jsonOptions);
 
-                    if (speciesResponse != null)
-                    {
-                        pokemon.Description = GetSpanishDescription(speciesResponse);
-                        pokemon.Category = GetSpanishCategory(speciesResponse);
-                        pokemon.Color = speciesResponse.Color?.Name ?? "unknown";
-                    }
-                }
-                catch
-                { }
+                if (speciesResponse == null)
+                    return null;
+
+                var pokemon = MapToPokemon(detailResponse, speciesResponse);
 
                 return pokemon;
             }
@@ -91,7 +86,7 @@ namespace Pokedex.Services
             }
         }
 
-        public async Task<Pokemon> GetPokemonByNameAsync(string name)
+        public async Task<Pokemon?> GetPokemonByNameAsync(string name)
         {
             try
             {
@@ -102,7 +97,18 @@ namespace Pokedex.Services
                 if (detailResponse == null)
                     return null;
 
-                return MapToPokemon(detailResponse);
+                var speciesUrl = detailResponse.Species?.Url;
+                if (speciesUrl == null)
+                    return null;
+
+                var speciesResponse = await _httpClient.GetFromJsonAsync<PokemonSpeciesResponse>(
+                    speciesUrl,
+                    _jsonOptions);
+
+                if (speciesResponse == null)
+                    return null;
+
+                return MapToPokemon(detailResponse, speciesResponse);
             }
             catch (Exception ex)
             {
@@ -111,51 +117,58 @@ namespace Pokedex.Services
             }
         }
 
-        private Pokemon MapToPokemon(PokemonDetailResponse detail)
+        private Pokemon MapToPokemon(PokemonDetailResponse detail, PokemonSpeciesResponse species)
         {
+            string flavorText = species.Flavor_Text_Entries?
+                .FirstOrDefault(f => f.Language!.Name == "en")?.Flavor_Text ?? "";
+
             return new Pokemon
             {
                 Id = detail.Id,
-                Name = detail.Name,
-                DisplayName = CapitalizeFirstLetter(detail.Name),
+                Name = detail.Name!,
+                DisplayName = CapitalizeFirstLetter(detail.Name!),
                 Height = detail.Height,
                 Weight = detail.Weight,
                 BaseExperience = detail.Base_Experience,
                 Types = detail.Types?
                     .OrderBy(t => t.Slot)
-                    .Select(t => CapitalizeFirstLetter(t.Type.Name))
+                    .Select(t => CapitalizeFirstLetter(t.Type!.Name!))
                     .ToList() ?? new List<string>(),
                 Abilities = detail.Abilities?
-                    .Select(a => CapitalizeFirstLetter(a.Ability.Name.Replace("-", " ")))
+                    .Select(a => CapitalizeFirstLetter(a.Ability!.Name!.Replace("-", " ")))
                     .ToList() ?? new List<string>(),
-                Stats = detail.Stats?.ToDictionary(
-                    s => s.Stat.Name,
+                Stats = detail.Stats!?.ToDictionary(
+                    s => s.Stat!.Name!,
                     s => s.Base_Stat) ?? new Dictionary<string, int>(),
-                ImageUrl = detail.Sprites?.Front_Default,
-                OfficialArtwork = detail.Sprites?.Other?.Official_Artwork?.Front_Default
+                ImageUrl = detail.Sprites!.Front_Default!,
+                OfficialArtwork = detail.Sprites!.Other!.Official_Artwork!.Front_Default!,
+                Description = GetSpanishDescription(species),
+                Color = species.Color!.Name!,
+                Category = GetSpanishCategory(species)
             };
         }
+
 
         private string GetSpanishDescription(PokemonSpeciesResponse species)
         {
             var spanishEntry = species.Flavor_Text_Entries?
-                .FirstOrDefault(f => f.Language.Name == "es");
+                .FirstOrDefault(f => f.Language!.Name == "es");
 
             if (spanishEntry != null)
             {
-                return spanishEntry.Flavor_Text.Replace("\n", " ").Replace("\f", " ");
+                return spanishEntry.Flavor_Text!.Replace("\n", " ").Replace("\f", " ");
             }
 
             var englishEntry = species.Flavor_Text_Entries?
-                .FirstOrDefault(f => f.Language.Name == "en");
+                .FirstOrDefault(f => f.Language!.Name == "en");
 
-            return englishEntry?.Flavor_Text.Replace("\n", " ").Replace("\f", " ") ?? "";
+            return englishEntry?.Flavor_Text!.Replace("\n", " ").Replace("\f", " ") ?? "";
         }
 
         private string GetSpanishCategory(PokemonSpeciesResponse species)
         {
             var spanishGenus = species.Genera?
-                .FirstOrDefault(g => g.Language.Name == "es");
+                .FirstOrDefault(g => g.Language!.Name == "es");
 
             return spanishGenus?.Genus_Text ?? "";
         }

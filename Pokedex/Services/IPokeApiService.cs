@@ -10,7 +10,7 @@ namespace Pokedex.Services
     public interface IPokeApiService
     {
         Task<List<Pokemon>> GetPokemonsAsync(int limit = 20, int offset = 0);
-        Task<Pokemon> GetPokemonByIdAsync(int id);
-        Task<Pokemon> GetPokemonByNameAsync(string name);
+        Task<Pokemon?> GetPokemonByIdAsync(int id);
+        Task<Pokemon?> GetPokemonByNameAsync(string name);
     }
 }
