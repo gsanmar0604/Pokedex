@@ -9,6 +9,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -20,6 +21,8 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Logging.AddDebug();
+        builder.Services.AddTransient<DetailViewModel>();
+        builder.Services.AddTransient<DetailPage>(); // Si tienes una página de detalle
 #endif
 
         // Registrar HttpClient

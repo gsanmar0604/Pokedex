@@ -58,11 +58,7 @@ public partial class MainViewModel : BaseViewModel
     {
         if (pokemon == null) return;
 
-        await Shell.Current.GoToAsync($"detail", true,
-            new Dictionary<string, object>
-            {
-                { "Pokemon", pokemon }
-            });
+        await Shell.Current.GoToAsync($"detail?PokemonId={pokemon.Id}");
     }
 
     [RelayCommand]
